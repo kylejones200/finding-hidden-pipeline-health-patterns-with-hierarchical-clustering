@@ -24,13 +24,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
-# Import Tufte plotting utilities
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from tda_utils import setup_tufte_plot, TufteColors
-
-
 
 print("=" * 70)
 print("Blog 23: Pipeline Health Clustering - Visualizations")
@@ -116,6 +109,8 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_position(('outward', 5))
 ax.spines['bottom'].set_position(('outward', 5))
+ax.grid(False)
+
 plt.tight_layout()
 plt.savefig('23_pipeline_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
@@ -153,6 +148,8 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_position(('outward', 5))
 ax.spines['bottom'].set_position(('outward', 5))
+ax.grid(False)
+
 plt.tight_layout()
 plt.savefig('23_pipeline_clusters_spatial.png', dpi=300, bbox_inches='tight')
 plt.close()
@@ -193,6 +190,8 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_position(('outward', 5))
 ax.spines['bottom'].set_position(('outward', 5))
+ax.grid(False)
+
 plt.tight_layout()
 plt.savefig('23_pipeline_cluster_profiles.png', dpi=300, bbox_inches='tight')
 plt.close()
