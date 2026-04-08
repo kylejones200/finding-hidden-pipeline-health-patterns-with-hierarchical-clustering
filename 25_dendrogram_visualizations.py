@@ -66,8 +66,6 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_position(('outward', 5))
 ax.spines['bottom'].set_position(('outward', 5))
-ax.grid(False)
-
 plt.tight_layout()
 plt.savefig('25_pipeline_health_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
@@ -127,8 +125,6 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_position(('outward', 5))
 ax.spines['bottom'].set_position(('outward', 5))
-ax.grid(False)
-
 plt.tight_layout()
 plt.savefig('25_compressor_regimes_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
@@ -154,6 +150,13 @@ ax.set_yticks([])
 
 # Legend
 from matplotlib.patches import Patch
+
+# Import Tufte plotting utilities
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from tda_utils import setup_tufte_plot, TufteColors
+
 legend_elements = [
     Patch(facecolor=colors_regimes[0], edgecolor='black', label='Steady-State'),
     Patch(facecolor=colors_regimes[1], edgecolor='black', label='Transient'),
@@ -166,8 +169,6 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_visible(False)
 ax.spines['bottom'].set_position(('outward', 5))
-ax.grid(False)
-
 plt.tight_layout()
 plt.savefig('25_compressor_cluster_timeline.png', dpi=300, bbox_inches='tight')
 plt.close()
@@ -217,8 +218,6 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['left'].set_position(('outward', 5))
 ax.spines['bottom'].set_position(('outward', 5))
-ax.grid(False)
-
 plt.tight_layout()
 plt.savefig('25_row_vegetation_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
