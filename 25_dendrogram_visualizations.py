@@ -1,6 +1,12 @@
 import sys
 import os
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # Add parent directory to path to import plot_style
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
@@ -25,16 +31,16 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
 
-print("=" * 70)
-print("Blog 25: Three Clustering Projects - Visualizations")
-print("=" * 70)
+logger.info("=" * 70)
+logger.info("Blog 25: Three Clustering Projects - Visualizations")
+logger.info("=" * 70)
 
 plt.rcParams['font.family'] = 'serif'
 
 # ============================================================================
 # Visualization 1: Pipeline Health Dendrogram
 # ============================================================================
-print("\nGenerating pipeline health clustering dendrogram...")
+logger.info("\nGenerating pipeline health clustering dendrogram...")
 
 np.random.seed(42)
 N = 200
@@ -69,12 +75,12 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('25_pipeline_health_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ Pipeline health dendrogram saved")
+logger.info("✓ Pipeline health dendrogram saved")
 
 # ============================================================================
 # Visualization 2: Compressor Operational Regimes Dendrogram
 # ============================================================================
-print("Generating compressor operational regimes dendrogram...")
+logger.info("Generating compressor operational regimes dendrogram...")
 
 np.random.seed(77)
 T = 24 * 30
@@ -128,12 +134,12 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('25_compressor_regimes_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ Compressor regimes dendrogram saved")
+logger.info("✓ Compressor regimes dendrogram saved")
 
 # ============================================================================
 # Visualization 3: Compressor Cluster Timeline
 # ============================================================================
-print("Generating compressor cluster timeline...")
+logger.info("Generating compressor cluster timeline...")
 
 df_daily['cluster_id'] = AgglomerativeClustering(n_clusters=4, linkage='ward').fit_predict(X_ops)
 
@@ -172,12 +178,12 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('25_compressor_cluster_timeline.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ Compressor cluster timeline saved")
+logger.info("✓ Compressor cluster timeline saved")
 
 # ============================================================================
 # Visualization 4: ROW Vegetation Dendrogram
 # ============================================================================
-print("Generating ROW vegetation clustering dendrogram...")
+logger.info("Generating ROW vegetation clustering dendrogram...")
 
 np.random.seed(9)
 N_tiles = 150
@@ -221,21 +227,21 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('25_row_vegetation_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ ROW vegetation dendrogram saved")
+logger.info("✓ ROW vegetation dendrogram saved")
 
 # ============================================================================
 # Summary
 # ============================================================================
-print("\n" + "=" * 70)
-print("All visualizations generated successfully!")
-print("=" * 70)
-print("\nFiles created:")
-print("  - 25_pipeline_health_dendrogram.png")
-print("  - 25_compressor_regimes_dendrogram.png")
-print("  - 25_compressor_cluster_timeline.png")
-print("  - 25_row_vegetation_dendrogram.png")
-print("\nProject Statistics:")
-print(f"  Pipeline segments clustered: {N}")
-print(f"  Compressor operational days: {len(df_daily)}")
-print(f"  ROW tiles clustered: {N_tiles}")
+logger.info("\n" + "=" * 70)
+logger.info("All visualizations generated successfully!")
+logger.info("=" * 70)
+logger.info("\nFiles created:")
+logger.info("  - 25_pipeline_health_dendrogram.png")
+logger.info("  - 25_compressor_regimes_dendrogram.png")
+logger.info("  - 25_compressor_cluster_timeline.png")
+logger.info("  - 25_row_vegetation_dendrogram.png")
+logger.info("\nProject Statistics:")
+logger.info(f"  Pipeline segments clustered: {N}")
+logger.info(f"  Compressor operational days: {len(df_daily)}")
+logger.info(f"  ROW tiles clustered: {N_tiles}")
 

@@ -1,6 +1,12 @@
 import sys
 import os
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # Add parent directory to path to import plot_style
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
@@ -32,9 +38,9 @@ from tda_utils import setup_tufte_plot, TufteColors
 
 
 
-print("=" * 70)
-print("Blog 23: Pipeline Health Clustering - Visualizations")
-print("=" * 70)
+logger.info("=" * 70)
+logger.info("Blog 23: Pipeline Health Clustering - Visualizations")
+logger.info("=" * 70)
 
 # Set style
 plt.rcParams['font.family'] = 'serif'
@@ -42,7 +48,7 @@ plt.rcParams['font.family'] = 'serif'
 # ============================================================================
 # Generate Synthetic Pipeline Segment Data
 # ============================================================================
-print("\nGenerating synthetic pipeline segment data...")
+logger.info("\nGenerating synthetic pipeline segment data...")
 
 np.random.seed(42)
 n_segments = 500
@@ -83,12 +89,12 @@ for i in range(n_segments):
     })
 
 df = pd.DataFrame(segments)
-print(f"✓ Generated {len(df)} segments")
+logger.info(f"✓ Generated {len(df)} segments")
 
 # ============================================================================
 # Visualization 1: Dendrogram
 # ============================================================================
-print("\nGenerating hierarchical clustering dendrogram...")
+logger.info("\nGenerating hierarchical clustering dendrogram...")
 
 # Select features for clustering
 features = ['avg_wall_loss_pct', 'max_wall_loss_pct', 'avg_cp_potential_mv', 
@@ -119,12 +125,12 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('23_pipeline_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ Dendrogram saved")
+logger.info("✓ Dendrogram saved")
 
 # ============================================================================
 # Visualization 2: Cluster Spatial Distribution
 # ============================================================================
-print("Generating cluster spatial distribution map...")
+logger.info("Generating cluster spatial distribution map...")
 
 # Perform clustering
 n_clusters = 5
@@ -156,12 +162,12 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('23_pipeline_clusters_spatial.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ Spatial distribution map saved")
+logger.info("✓ Spatial distribution map saved")
 
 # ============================================================================
 # Visualization 3: Cluster Profiles (Radar Chart)
 # ============================================================================
-print("Generating cluster profile comparison...")
+logger.info("Generating cluster profile comparison...")
 
 # Compute cluster statistics
 cluster_profiles = df.groupby('cluster_id')[features].mean()
@@ -196,24 +202,24 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('23_pipeline_cluster_profiles.png', dpi=300, bbox_inches='tight')
 plt.close()
-print("✓ Cluster profiles saved")
+logger.info("✓ Cluster profiles saved")
 
 # ============================================================================
 # Summary Statistics
 # ============================================================================
-print("\n" + "=" * 70)
-print("All visualizations generated successfully!")
-print("=" * 70)
-print("\nFiles created:")
-print("  - 23_pipeline_dendrogram.png")
-print("  - 23_pipeline_clusters_spatial.png")
-print("  - 23_pipeline_cluster_profiles.png")
-print("\nCluster Statistics:")
+logger.info("\n" + "=" * 70)
+logger.info("All visualizations generated successfully!")
+logger.info("=" * 70)
+logger.info("\nFiles created:")
+logger.info("  - 23_pipeline_dendrogram.png")
+logger.info("  - 23_pipeline_clusters_spatial.png")
+logger.info("  - 23_pipeline_cluster_profiles.png")
+logger.info("\nCluster Statistics:")
 for i in range(1, n_clusters + 1):
     cluster_data = df[df['cluster_id'] == i]
-    print(f"\n  Cluster {i} ({cluster_names[i-1]}):")
-    print(f"    Segments: {len(cluster_data)}")
-    print(f"    Avg Wall Loss: {cluster_data['avg_wall_loss_pct'].mean():.1f}%")
-    print(f"    Avg CP Potential: {cluster_data['avg_cp_potential_mv'].mean():.0f} mV")
-    print(f"    Avg Soil Resistivity: {cluster_data['avg_soil_resistivity_ohm_cm'].mean():.0f} Ω·cm")
+    logger.info(f"\n  Cluster {i} ({cluster_names[i-1]}):")
+    logger.info(f"    Segments: {len(cluster_data)}")
+    logger.info(f"    Avg Wall Loss: {cluster_data['avg_wall_loss_pct'].mean():.1f}%")
+    logger.info(f"    Avg CP Potential: {cluster_data['avg_cp_potential_mv'].mean():.0f} mV")
+    logger.info(f"    Avg Soil Resistivity: {cluster_data['avg_soil_resistivity_ohm_cm'].mean():.0f} Ω·cm")
 
