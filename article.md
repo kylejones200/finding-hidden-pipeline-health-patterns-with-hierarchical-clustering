@@ -1,70 +1,48 @@
+---
+author: "Kyle Jones"
+date_published: "October 28, 2025"
+date_exported_from_medium: "November 10, 2025"
+canonical_link: "https://medium.com/@kyle-t-jones/finding-hidden-pipeline-health-patterns-with-hierarchical-clustering-e9d3d08e2931"
+---
+
 # Finding Hidden Pipeline Health Patterns with Hierarchical Clustering A pipeline integrity engineer reviews inline inspection (ILI) data for
 500 km of pipeline divided into 2,000 segments. The average wall...
 
-::::::::### Finding Hidden Pipeline Health Patterns with Hierarchical Clustering 
+### Finding Hidden Pipeline Health Patterns with Hierarchical Clustering 
 
-A pipeline integrity engineer reviews inline inspection (ILI) data for
-500 km of pipeline divided into 2,000 segments. The average wall loss is
-12%. Management asks: "Is this acceptable?"
+A pipeline integrity engineer reviews inline inspection (ILI) data for 500 km of pipeline divided into 2,000 segments. The average wall loss is 12%. Management asks: "Is this acceptable?"
 
-The answer? It depends. What are the average hides? Are 90% of segments
-pristine with 10% severely corroded? Or is every segment uniformly
-degraded? Are coastal segments behaving differently from desert
-segments? Traditional dashboards show summary statistics --- mean wall
-loss, maximum pit depth, total anomalies --- but these metrics obscure
-natural groups that share similar degradation signatures.
+The answer? It depends. What are the average hides? Are 90% of segments pristine with 10% severely corroded? Or is every segment uniformly degraded? Are coastal segments behaving differently from desert segments? Traditional dashboards show summary statistics --- mean wall loss, maximum pit depth, total anomalies --- but these metrics obscure natural groups that share similar degradation signatures.
 
-An operator might flag segments exceeding a single threshold (e.g., wall
-loss \> 20%), but this binary classification misses nuance. A segment
-with 18% wall loss, poor coating, and high soil resistivity is riskier
-than a 22% wall loss segment with excellent CP and recent remediation.
-Thresholds can't capture these multivariate patterns.
+An operator might flag segments exceeding a single threshold (e.g., wall loss \> 20%), but this binary classification misses nuance. A segment with 18% wall loss, poor coating, and high soil resistivity is riskier than a 22% wall loss segment with excellent CP and recent remediation. Thresholds can't capture these multivariate patterns.
 
 
-Hierarchical clustering solves this. By grouping segments based on
-multiple features --- wall loss, cathodic protection (CP) potential,
-soil resistivity, coating condition, and historical inspection
-trends --- you uncover natural health regimes that inform targeted
-integrity management. This article demonstrates a working implementation
-using Apache Spark, SciPy, and Databricks.
+Hierarchical clustering solves this. By grouping segments based on multiple features --- wall loss, cathodic protection (CP) potential, soil resistivity, coating condition, and historical inspection trends --- you uncover natural health regimes that inform targeted integrity management. This article demonstrates a working implementation using Apache Spark, SciPy, and Databricks.
 
 ### Binary Thresholds vs. Complex Degradation Signatures
 Let explore this through two scenarios.
 
 Scenario 1: Two segments both have 15% average wall loss:
 
-- Segment A: Stable CP (-1,050 mV), dense coating, low soil resistivity
-  (1,500 Ω·cm), no active corrosion.
-- Segment B: Marginal CP (-820 mV), degraded coating, high soil
-  resistivity (8,000 Ω·cm), active pitting.
+- Segment A: Stable CP (-1,050 mV), dense coating, low soil resistivity (1,500 Ω·cm), no active corrosion.
+- Segment B: Marginal CP (-820 mV), degraded coating, high soil resistivity (8,000 Ω·cm), active pitting.
 
-A threshold-based system would treat these segments identically. But
-really, Segment B requires immediate attention while Segment A can wait
-for the next scheduled inspection.
+A threshold-based system would treat these segments identically. But really, Segment B requires immediate attention while Segment A can wait for the next scheduled inspection.
 
 Scenario 2: Three segments exceed 20% wall loss:
 
-- Segment C: Localized external corrosion at a road crossing, otherwise
-  stable.
-- Segment D: Widespread internal corrosion from wet gas,
-  accelerating.
-- Segment E: Manufacturing anomaly (lamination), not
-  progressing.
+- Segment C: Localized external corrosion at a road crossing, otherwise stable.
+- Segment D: Widespread internal corrosion from wet gas, accelerating.
+- Segment E: Manufacturing anomaly (lamination), not progressing.
 
-All three exceed the threshold, but root causes and risk profiles
-differ. Treating them uniformly wastes resources.
+All three exceed the threshold, but root causes and risk profiles differ. Treating them uniformly wastes resources.
 
-Hierarchical clustering identifies groups of segments with similar
-multivariate signatures, enabling:
+Hierarchical clustering identifies groups of segments with similar multivariate signatures, enabling:
 
-- Differentiated inspection intervals: Low-risk clusters get 5-year
-  cycles; high-risk clusters get annual digs.
-- Root cause analysis: Clusters often map to physical causes (coating
-  failure, soil chemistry, operational stress).
-- Resource optimization: Focus CP upgrades on clusters where coating
-  degradation dominates.
-- Regulatory compliance: Demonstrate risk-based decision-making with
-  transparent groupings.
+- Differentiated inspection intervals: Low-risk clusters get 5-year cycles; high-risk clusters get annual digs.
+- Root cause analysis: Clusters often map to physical causes (coating failure, soil chemistry, operational stress).
+- Resource optimization: Focus CP upgrades on clusters where coating degradation dominates.
+- Regulatory compliance: Demonstrate risk-based decision-making with transparent groupings.
 
 ### Aggregating ILI Anomalies Per Segment
 ``` 
@@ -118,13 +96,9 @@ WHERE ili.avg_wall_loss_pct IS NOT NULL;  -- Only segments with ILI data
 ```
 
 ### Hierarchical Clustering with SciPy
-Hierarchical Clustering is an unsupervised learning method that looks to
-see how similar groups are. Unlike K-means, you don't need to know the
-number of clusters upfront. This approaches reveals nested groupings (in
-our case "High Risk" splits into "Coating Failure" vs. "CP Deficiency").
+Hierarchical Clustering is an unsupervised learning method that looks to see how similar groups are. Unlike K-means, you don't need to know the number of clusters upfront. This approaches reveals nested groupings (in our case "High Risk" splits into "Coating Failure" vs. "CP Deficiency").
 
-The Dendrogram is a visual repersentaitons of how segments merge into
-different clusters.
+The Dendrogram is a visual repersentaitons of how segments merge into different clusters.
 
 ```python
 import pandas as pd
@@ -164,10 +138,8 @@ result_df.write.mode('overwrite').saveAsTable('gold.segment_clusters')
 
 Key choices:
 
-- Ward linkage: Minimizes within-cluster variance (similar to K-means
-  objective).
-- StandardScaler: Prevents features with large scales (e.g., soil
-  resistivity in Ω·cm) from dominating.
+- Ward linkage: Minimizes within-cluster variance (similar to K-means objective).
+- StandardScaler: Prevents features with large scales (e.g., soil resistivity in Ω·cm) from dominating.
 - Median imputation: Handles missing values conservatively.
 
 ### Visualizing the Dendrogram
@@ -191,43 +163,36 @@ plt.show()
 
 What does this mean? Here is how to read the dendogram.
 
-- Horizontal lines: Represent cluster merges. Height indicates
-  dissimilarity.
+- Horizontal lines: Represent cluster merges. Height indicates dissimilarity.
 - Vertical lines: Show which segments/clusters merge.
-- Color threshold: Cuts at a specific height to define final clusters
-  (shown in different colors).
+- Color threshold: Cuts at a specific height to define final clusters (shown in different colors).
 
 ### Cluster Profiling: What Do the Groups Mean?
 Let's interpret what the different groups mean.
 
 Cluster 1: "Healthy --- Low Risk"
 
-- Low wall loss (5.2%), excellent CP (-1,050 mV), low soil
-  resistivity.
+- Low wall loss (5.2%), excellent CP (-1,050 mV), low soil resistivity.
 - Action: Standard 5-year inspection cycle.
 
 Cluster 2: "Moderate --- Coating Degradation"
 
-- Moderate wall loss (18.3%), adequate CP (-980 mV), moderate soil
-  resistivity.
+- Moderate wall loss (18.3%), adequate CP (-980 mV), moderate soil resistivity.
 - Action: Coating repair program, 3-year inspection cycle.
 
 Cluster 3: "High Risk --- CP Deficiency"
 
-- High wall loss (22.7%), poor CP (-810 mV), high soil
-  resistivity.
+- High wall loss (22.7%), poor CP (-810 mV), high soil resistivity.
 - Action: Immediate CP rectifier upgrades, annual inspections.
 
 Cluster 4: "Stable --- Well Protected"
 
-- Moderate wall loss (14.5%), excellent CP (-1,100 mV), low soil
-  resistivity.
+- Moderate wall loss (14.5%), excellent CP (-1,100 mV), low soil resistivity.
 - Action: Continue current CP program, 4-year inspection cycle.
 
 Cluster 5: "Critical --- Multi-Factor"
 
-- Very high wall loss (28.4%), very poor CP (-750 mV), very high soil
-  resistivity.
+- Very high wall loss (28.4%), very poor CP (-750 mV), very high soil resistivity.
 - Action: Emergency digs, CP overhaul, consider replacement.
 
 
@@ -262,16 +227,12 @@ plt.show()
 
 Insights:
 
-- Cluster 5 (Critical) segments concentrate at km 150--180 (likely a
-  river crossing with poor CP coverage).
-- Cluster 1 (Healthy) dominates km 0--100 (recent coating
-  rehabilitation project).
-- Cluster 3 (High Risk) appears sporadically (isolated CP rectifier
-  failures).
+- Cluster 5 (Critical) segments concentrate at km 150--180 (likely a river crossing with poor CP coverage).
+- Cluster 1 (Healthy) dominates km 0--100 (recent coating rehabilitation project).
+- Cluster 3 (High Risk) appears sporadically (isolated CP rectifier failures).
 
 ### Tracking Cluster Migration Over Time
-Segments can move between clusters as conditions change. Track this with
-a versioned Delta table:
+Segments can move between clusters as conditions change. Track this with a versioned Delta table:
 
 ``` 
 CREATE OR REPLACE TABLE gold.segment_cluster_history (
@@ -304,8 +265,7 @@ WHERE prev_cluster = 1 AND curr_cluster IN (3, 5)
 ORDER BY wall_loss_increase DESC;
 ```
 
-This identifies segments with accelerating degradation that require
-immediate investigation.
+This identifies segments with accelerating degradation that require immediate investigation.
 
 ### Features for Compressor Station Clustering
 ``` 
@@ -324,34 +284,23 @@ features_operational = [
 
 ### Identified Operational Clusters
 - Cluster A: Steady-state operation (low variance).
-- Cluster B: Transient operation (high variance, frequent
-  starts/stops).
+- Cluster B: Transient operation (high variance, frequent starts/stops).
 - Cluster C: Surge-prone (high kurtosis in flow rate).
 - Cluster D: Low-flow / idle (near-zero flow for \>12 hours).
 
-Use case: Flag Cluster C days for surge analysis. Correlate with
-compressor failures.
+Use case: Flag Cluster C days for surge analysis. Correlate with compressor failures.
 
 ### Prerequisites
-This project assumes you are using a Databricks workspace with Unity
-Catalog and that you have ILI data ingested into Delta tables.
+This project assumes you are using a Databricks workspace with Unity Catalog and that you have ILI data ingested into Delta tables.
 
-- CP survey data with (segment_id, cp_potential_mv,
-  survey_date).
+- CP survey data with (segment_id, cp_potential_mv, survey_date).
 - Soil resistivity data with (segment_id, resistivity_ohm_cm).
-::::### So what? 
+### So what? 
 
-This approach demosntate that we should look beyond simle averages.
-Hierarchical clustering reveals natural groupings in pipeline health
-that simple thresholds miss. We can built features that help reveal
-degredation and we can visuzlie this with a dendrogram.
+This approach demosntate that we should look beyond simle averages. Hierarchical clustering reveals natural groupings in pipeline health that simple thresholds miss. We can built features that help reveal degredation and we can visuzlie this with a dendrogram.
 
-From a business point of view, this helps us move to risk-based
-inspection beause we can assign differentiated inspection intervals
-based on cluster profiles (5-year for low-risk, annual for high-risk).
-This data-driven clustering supports risk-based integrity management
-plans.
-::::### Complete Implementation 
+From a business point of view, this helps us move to risk-based inspection beause we can assign differentiated inspection intervals based on cluster profiles (5-year for low-risk, annual for high-risk). This data-driven clustering supports risk-based integrity management plans.
+### Complete Implementation 
 
 ```python
 # Databricks Notebook: Pipeline Health Clustering
@@ -479,10 +428,3 @@ plt.savefig('/dbfs/FileStore/pipeline_clusters_spatial.png', dpi=300, bbox_inche
 plt.show()
 print('✓ Spatial map saved')
 ```
-::::::::::::::::By [Kyle Jones](https://medium.com/@kyle-t-jones) on
-[October 28, 2025](https://medium.com/p/e9d3d08e2931).
-
-[Canonical
-link](https://medium.com/@kyle-t-jones/finding-hidden-pipeline-health-patterns-with-hierarchical-clustering-e9d3d08e2931)
-
-Exported from [Medium](https://medium.com) on November 10, 2025.
