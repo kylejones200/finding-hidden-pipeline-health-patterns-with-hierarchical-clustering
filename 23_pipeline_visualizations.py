@@ -7,9 +7,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-# Add parent directory to path to import plot_style
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
 """
 Blog 23: Pipeline Health Clustering - Visualization Generator
@@ -24,20 +21,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import AgglomerativeClustering
 
 
-# Add parent directory to path to import plot_style
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import Tufte plotting utilities
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from tda_utils import setup_tufte_plot, TufteColors
-
-
-
 logger.info("Blog 23: Pipeline Health Clustering - Visualizations")
 
 # Set style
-plt.rcParams['font.family'] = 'serif'
 
 # ============================================================================
 # Generate Synthetic Pipeline Segment Data

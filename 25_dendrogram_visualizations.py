@@ -7,9 +7,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-# Add parent directory to path to import plot_style
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
 """
 Blog 25: Three Clustering Projects - Visualization Generator
@@ -24,13 +21,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import AgglomerativeClustering
 
 
-# Add parent directory to path to import plot_style
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 logger.info("Blog 25: Three Clustering Projects - Visualizations")
 
-plt.rcParams['font.family'] = 'serif'
 
 # ============================================================================
 # Visualization 1: Pipeline Health Dendrogram
@@ -152,11 +146,7 @@ ax.set_yticks([])
 # Legend
 from matplotlib.patches import Patch
 
-# Import Tufte plotting utilities
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from tda_utils import setup_tufte_plot, TufteColors
-
 legend_elements = [
     Patch(facecolor=colors_regimes[0], edgecolor='black', label='Steady-State'),
     Patch(facecolor=colors_regimes[1], edgecolor='black', label='Transient'),
