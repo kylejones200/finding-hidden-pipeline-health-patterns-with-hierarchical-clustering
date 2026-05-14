@@ -31,9 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
 
 
-logger.info("=" * 70)
 logger.info("Blog 25: Three Clustering Projects - Visualizations")
-logger.info("=" * 70)
 
 plt.rcParams['font.family'] = 'serif'
 
@@ -232,9 +230,7 @@ logger.info("✓ ROW vegetation dendrogram saved")
 # ============================================================================
 # Summary
 # ============================================================================
-logger.info("\n" + "=" * 70)
-logger.info("All visualizations generated successfully!")
-logger.info("=" * 70)
+logger.info("=== All visualizations generated successfully! ===")
 logger.info("\nFiles created:")
 logger.info("  - 25_pipeline_health_dendrogram.png")
 logger.info("  - 25_compressor_regimes_dendrogram.png")

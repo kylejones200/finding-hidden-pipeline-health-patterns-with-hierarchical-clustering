@@ -38,9 +38,7 @@ from tda_utils import setup_tufte_plot, TufteColors
 
 
 
-logger.info("=" * 70)
 logger.info("Blog 23: Pipeline Health Clustering - Visualizations")
-logger.info("=" * 70)
 
 # Set style
 plt.rcParams['font.family'] = 'serif'
@@ -207,9 +205,7 @@ logger.info("✓ Cluster profiles saved")
 # ============================================================================
 # Summary Statistics
 # ============================================================================
-logger.info("\n" + "=" * 70)
-logger.info("All visualizations generated successfully!")
-logger.info("=" * 70)
+logger.info("=== All visualizations generated successfully! ===")
 logger.info("\nFiles created:")
 logger.info("  - 23_pipeline_dendrogram.png")
 logger.info("  - 23_pipeline_clusters_spatial.png")
