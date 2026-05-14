@@ -30,13 +30,13 @@ Group pipe segments with similar condition and environmental features to identif
 
 ### Data Sources
 
-**Inline Inspection (ILI)** provides wall loss measurements, anomaly counts, and pit depths from magnetic flux leakage or ultrasonic tools.
+Inline Inspection (ILI) provides wall loss measurements, anomaly counts, and pit depths from magnetic flux leakage or ultrasonic tools.
 
-**Cathodic Protection (CP) surveys** measure potential readings and rectifier currents at test points along the pipeline.
+Cathodic Protection (CP) surveys measure potential readings and rectifier currents at test points along the pipeline.
 
-**Soil surveys** characterize resistivity, pH, and moisture content—factors controlling corrosion rates.
+Soil surveys characterize resistivity, pH, and moisture content—factors controlling corrosion rates.
 
-**GIS metadata** includes coating type, distance to water bodies, and installation year—attributes affecting long-term integrity.
+GIS metadata includes coating type, distance to water bodies, and installation year—attributes affecting long-term integrity.
 
 ### Feature Engineering
 
@@ -54,7 +54,7 @@ Ward's linkage method computes hierarchical clustering. Ward minimizes within-cl
 
 The dendrogram visualizes the clustering hierarchy. Horizontal lines represent merges; line height indicates dissimilarity. Short branches show segments merging early (very similar), while long branches indicate late merges (distinct health regimes). Cutting the dendrogram at height=8 yields 5 colored clusters.
 
-**Interpreting the structure:** The tallest horizontal lines reveal major health regime divisions. Clusters merging at high linkage distances represent fundamentally different integrity states (e.g., excellent CP + modern coating vs. poor CP + degraded coating).
+Interpreting the structure: The tallest horizontal lines reveal major health regime divisions. Clusters merging at high linkage distances represent fundamentally different integrity states (e.g., excellent CP + modern coating vs. poor CP + degraded coating).
 
 (See Complete Implementation section for clustering and visualization code)
 
@@ -76,13 +76,13 @@ Cluster 4 (15.1% wall loss, -910 mV CP, 0.70 coating score) indicates moderate r
 
 ### Operational Value
 
-**Differentiated inspection intervals:** High-risk Cluster 3 receives annual ILI; low-risk Cluster 0 extends to 5-year cycles. Optimizes inspection budget by focusing frequent inspections where risk concentrates.
+Differentiated inspection intervals: High-risk Cluster 3 receives annual ILI; low-risk Cluster 0 extends to 5-year cycles. Optimizes inspection budget by focusing frequent inspections where risk concentrates.
 
-**Root cause analysis:** Cluster 1 maps to coating failure → prioritize coating repair programs. Cluster 3 maps to CP deficiency → rectifier upgrades and anode installations. Cluster-specific interventions address underlying mechanisms rather than treating symptoms.
+Root cause analysis: Cluster 1 maps to coating failure → prioritize coating repair programs. Cluster 3 maps to CP deficiency → rectifier upgrades and anode installations. Cluster-specific interventions address underlying mechanisms rather than treating symptoms.
 
-**Resource optimization:** A $2M CP budget delivers maximum impact by targeting Cluster 3 segments where poor CP drives rapid corrosion. Installing rectifiers on Cluster 0 segments (already well-protected) yields minimal benefit.
+Resource optimization: A $2M CP budget delivers maximum impact by targeting Cluster 3 segments where poor CP drives rapid corrosion. Installing rectifiers on Cluster 0 segments (already well-protected) yields minimal benefit.
 
-**Regulatory compliance:** Risk-based integrity management requires demonstrating data-driven segment prioritization. Dendrograms and cluster profiles provide transparent, auditable justification for variable inspection intervals.
+Regulatory compliance: Risk-based integrity management requires demonstrating data-driven segment prioritization. Dendrograms and cluster profiles provide transparent, auditable justification for variable inspection intervals.
 
 ---
 
@@ -153,15 +153,15 @@ Spatial coverage divides the 150 km pipeline corridor into 1 km² tiles, yieldin
 
 Each tile receives five features characterizing environmental conditions:
 
-**NDVI mean** (0 = bare soil, 1 = dense vegetation) averages vegetation index across the tile. Healthy grassland typically shows 0.3-0.5, dense forest reaches 0.7-0.9, bare or disturbed ground drops below 0.2.
+NDVI mean (0 = bare soil, 1 = dense vegetation) averages vegetation index across the tile. Healthy grassland typically shows 0.3-0.5, dense forest reaches 0.7-0.9, bare or disturbed ground drops below 0.2.
 
-**NDVI standard deviation** captures heterogeneity. Low variance indicates uniform cover (grassland or pavement); high variance suggests mixed forest or mosaic landscapes with exposed soil patches.
+NDVI standard deviation captures heterogeneity. Low variance indicates uniform cover (grassland or pavement); high variance suggests mixed forest or mosaic landscapes with exposed soil patches.
 
-**Texture (GLCM)** quantifies spatial roughness. Smooth surfaces (bare soil, water, pavement) score low (0.05-0.15). Textured landscapes (vegetation, construction debris) score high (0.3-0.5).
+Texture (GLCM) quantifies spatial roughness. Smooth surfaces (bare soil, water, pavement) score low (0.05-0.15). Textured landscapes (vegetation, construction debris) score high (0.3-0.5).
 
-**Thermal anomaly score** measures temperature deviation from baseline. Exposed soil and disturbed ground heat faster than vegetated surfaces, showing positive anomalies. Construction activity, fresh excavations, and vehicle traffic create thermal signatures.
+Thermal anomaly score measures temperature deviation from baseline. Exposed soil and disturbed ground heat faster than vegetated surfaces, showing positive anomalies. Construction activity, fresh excavations, and vehicle traffic create thermal signatures.
 
-**Bare soil fraction** counts pixels with NDVI <0.2, expressing percentage of tile lacking vegetation cover. Pipelines typically maintain cleared right-of-way (10-30% bare), but values exceeding 50% indicate disturbance or encroachment.
+Bare soil fraction counts pixels with NDVI <0.2, expressing percentage of tile lacking vegetation cover. Pipelines typically maintain cleared right-of-way (10-30% bare), but values exceeding 50% indicate disturbance or encroachment.
 
 (See Complete Implementation section for feature engineering code)
 
@@ -169,15 +169,15 @@ Each tile receives five features characterizing environmental conditions:
 
 Normalization standardizes the five features. Ward's linkage computes hierarchical clustering. Cutting the dendrogram at height=4 yields 5 environmental clusters.
 
-**Cluster 0 (NDVI 0.7, 5% bare):** Dense, stable vegetation. Healthy forest or mature grassland with minimal disturbance. Standard patrol intervals (quarterly) suffice.
+Cluster 0 (NDVI 0.7, 5% bare): Dense, stable vegetation. Healthy forest or mature grassland with minimal disturbance. Standard patrol intervals (quarterly) suffice.
 
-**Cluster 1 (NDVI 0.5, 20% bare):** Moderate vegetation with mixed cover. Typical managed right-of-way with maintained clearing. Monitor for changes but no immediate concerns.
+Cluster 1 (NDVI 0.5, 20% bare): Moderate vegetation with mixed cover. Typical managed right-of-way with maintained clearing. Monitor for changes but no immediate concerns.
 
-**Cluster 2 (NDVI 0.2, 65% bare):** Bare or disturbed ground. IMMEDIATE INSPECTION required. Potential causes: unauthorized construction, vehicle traffic, soil erosion, or pipeline maintenance leaving exposed trench.
+Cluster 2 (NDVI 0.2, 65% bare): Bare or disturbed ground. IMMEDIATE INSPECTION required. Potential causes: unauthorized construction, vehicle traffic, soil erosion, or pipeline maintenance leaving exposed trench.
 
-**Cluster 3 (NDVI 0.4, 40% bare):** Mosaic vegetation with exposed soil patches. Priority patrol area—disturbance level exceeds normal maintenance clearing.
+Cluster 3 (NDVI 0.4, 40% bare): Mosaic vegetation with exposed soil patches. Priority patrol area—disturbance level exceeds normal maintenance clearing.
 
-**Cluster 4 (NDVI 0.3, 50% bare, high thermal):** High thermal anomaly with extensive bare ground. ENCROACHMENT ALERT—signature matches construction equipment or material staging areas. Ground patrol scheduled within 48 hours.
+Cluster 4 (NDVI 0.3, 50% bare, high thermal): High thermal anomaly with extensive bare ground. ENCROACHMENT ALERT—signature matches construction equipment or material staging areas. Ground patrol scheduled within 48 hours.
 
 (See Complete Implementation section for clustering code)
 
@@ -185,7 +185,7 @@ Normalization standardizes the five features. Ward's linkage computes hierarchic
 
 In production deployments, Mosaic visualizes cluster assignments geographically. The system saves clustering results to a Delta table with geometry columns encoding tile boundaries. Mosaic's `display()` function renders the 150 km corridor colored by cluster_id, enabling visual inspection of spatial patterns.
 
-**Operational response examples:**
+Operational response examples:
 
 Cluster 2 identification: 12 tiles at km 45-57 show bare ground signature. Aerial drone survey scheduled within 3 days to assess disturbance cause (erosion vs encroachment).
 
@@ -201,19 +201,19 @@ Cluster 0 optimization: 89 tiles maintain healthy vegetation with no disturbance
 
 ### Dendrogram Advantages
 
-**No pre-specified K:** Unlike K-means, hierarchical clustering doesn't require knowing the number of clusters upfront. The dendrogram shows where natural groupings exist—cut at different heights to explore sensitivity to cluster count.
+No pre-specified K: Unlike K-means, hierarchical clustering doesn't require knowing the number of clusters upfront. The dendrogram shows where natural groupings exist—cut at different heights to explore sensitivity to cluster count.
 
-**Hierarchical structure:** Reveals nested relationships. Example: "High Risk" splits into "CP Deficiency" vs "Coating Failure" at lower linkage levels. This multi-scale view informs both strategic (5 high-level regimes) and tactical (10 sub-clusters for detailed analysis) decisions.
+Hierarchical structure: Reveals nested relationships. Example: "High Risk" splits into "CP Deficiency" vs "Coating Failure" at lower linkage levels. This multi-scale view informs both strategic (5 high-level regimes) and tactical (10 sub-clusters for detailed analysis) decisions.
 
-**Visual interpretability:** Engineers see exactly which assets merge together and at what dissimilarity threshold. No black-box model—full transparency into similarity relationships.
+Visual interpretability: Engineers see exactly which assets merge together and at what dissimilarity threshold. No black-box model—full transparency into similarity relationships.
 
-**Reproducibility:** Cutting the dendrogram at different heights enables sensitivity analysis: "What if we use 4 clusters instead of 5?" The hierarchical structure remains stable; only the granularity changes.
+Reproducibility: Cutting the dendrogram at different heights enables sensitivity analysis: "What if we use 4 clusters instead of 5?" The hierarchical structure remains stable; only the granularity changes.
 
 ### When to Use Dendrograms vs K-Means
 
-**Hierarchical Clustering** excels at exploratory analysis with small-medium datasets (<10K records) where interpretability matters. The O(n²) memory and compute complexity limits scalability but provides unmatched insight into data structure.
+Hierarchical Clustering excels at exploratory analysis with small-medium datasets (<10K records) where interpretability matters. The O(n²) memory and compute complexity limits scalability but provides unmatched insight into data structure.
 
-**K-Means** handles large datasets (>100K records) with known cluster counts and production speed requirements. However, it requires pre-specifying K, shows sensitivity to initialization, and lacks the hierarchical view.
+K-Means handles large datasets (>100K records) with known cluster counts and production speed requirements. However, it requires pre-specifying K, shows sensitivity to initialization, and lacks the hierarchical view.
 
 For pipeline integrity (hundreds to thousands of segments), hierarchical clustering with dendrograms is ideal. For SCADA analytics (millions of timesteps), use K-means or mini-batch K-means.
 
@@ -223,11 +223,11 @@ For pipeline integrity (hundreds to thousands of segments), hierarchical cluster
 
 All three projects follow the same Databricks medallion architecture:
 
-**Bronze Layer** ingests raw data without transformation. ILI files arrive as CSV or RST formats. SCADA telemetry streams through Kafka. Sentinel-2 raster tiles load as GeoTIFF files. Bronze tables preserve original data for auditability.
+Bronze Layer ingests raw data without transformation. ILI files arrive as CSV or RST formats. SCADA telemetry streams through Kafka. Sentinel-2 raster tiles load as GeoTIFF files. Bronze tables preserve original data for auditability.
 
-**Silver Layer** applies feature engineering using Spark SQL and Python UDFs. Segment-level ILI aggregates compute mean wall loss, anomaly counts, and depth statistics. Daily SCADA rolling statistics calculate variance, kurtosis, and trend indicators. Per-tile NDVI and texture metrics derive from raster processing.
+Silver Layer applies feature engineering using Spark SQL and Python UDFs. Segment-level ILI aggregates compute mean wall loss, anomaly counts, and depth statistics. Daily SCADA rolling statistics calculate variance, kurtosis, and trend indicators. Per-tile NDVI and texture metrics derive from raster processing.
 
-**Gold Layer** stores clustering results ready for consumption. Tables contain segment_id and cluster_id pairs, cluster profiles showing mean features per cluster, and linkage matrices for dendrogram regeneration. Gold tables power Databricks SQL dashboards.
+Gold Layer stores clustering results ready for consumption. Tables contain segment_id and cluster_id pairs, cluster profiles showing mean features per cluster, and linkage matrices for dendrogram regeneration. Gold tables power Databricks SQL dashboards.
 
 ### Delta Live Tables Integration
 
@@ -235,11 +235,11 @@ The system implements cluster assignment as a DLT table. The `segment_health_clu
 
 This pattern enables:
 
-**Automated updates:** Re-cluster quarterly as new ILI data arrives. DLT handles incremental processing—only new or changed segments trigger reclustering.
+Automated updates: Re-cluster quarterly as new ILI data arrives. DLT handles incremental processing—only new or changed segments trigger reclustering.
 
-**Version control:** Delta time-travel allows comparing clustering results over time: "How did Segment SEG-0123's cluster assignment change from Q1 to Q2?"
+Version control: Delta time-travel allows comparing clustering results over time: "How did Segment SEG-0123's cluster assignment change from Q1 to Q2?"
 
-**MLflow tracking:** Log linkage method, n_clusters, feature set, and silhouette scores for reproducibility. Compare experiments to optimize cluster count and feature selection.
+MLflow tracking: Log linkage method, n_clusters, feature set, and silhouette scores for reproducibility. Compare experiments to optimize cluster count and feature selection.
 
 (See Complete Implementation section for DLT integration code)
 
@@ -249,24 +249,24 @@ This pattern enables:
 
 ### Case Study: 500 km Crude Oil Pipeline
 
-**Before clustering:**
+Before clustering:
 - Uniform 3-year ILI inspection cycle for all 2,000 segments
 - Annual integrity budget: $4.2M (700 excavations × $6K each)
 - 12 leak events over 5 years (average repair cost: $850K)
 
-**After implementing cluster-based integrity:**
+After implementing cluster-based integrity:
 
 Differentiated inspection intervals by cluster: Cluster 0 (Healthy, 420 segments) extends to 5-year cycle → 84 inspections/year. Cluster 1 (Moderate, 310 segments) maintains 3-year cycle → 103 inspections/year. Cluster 2 (High Risk, 180 segments) intensifies to 1-year cycle → 180 inspections/year. Cluster 3 (Stable, 520 segments) operates on 4-year cycle → 130 inspections/year. Cluster 4 (Critical, 70 segments) triggers immediate replacement.
 
 Targeted interventions: Installed 15 new CP rectifiers for Cluster 2 segments at $675K. Replaced 70 critical segments (Cluster 4) at $8.4M one-time capital investment.
 
-**Results after 3 years:**
+Results after 3 years:
 - Leak events: 12 → 2 (83% reduction)
 - Annual inspection cost: $4.2M → $3.1M (26% savings)
 - Avoided leak costs: 10 leaks × $850K = $8.5M
-- Net ROI: $8.5M + 3 × $1.1M - $9.1M = **$2.7M positive**
+- Net ROI: $8.5M + 3 × $1.1M - $9.1M = $2.7M positive
 
-**Regulatory approval:** Risk-based inspection intervals approved by state regulator. Dendrogram included in annual integrity report as proof of data-driven decision-making.
+Regulatory approval: Risk-based inspection intervals approved by state regulator. Dendrogram included in annual integrity report as proof of data-driven decision-making.
 
 ---
 
@@ -322,17 +322,17 @@ Implement weekly Databricks Jobs that detect cluster transitions. SQL query iden
 
 ## Key Takeaways
 
-**Patterns over points:** Clustering reveals natural groupings that single-variable thresholds miss. Two segments with identical wall loss receive vastly different cluster assignments (and maintenance priorities) based on CP, soil, coating, and location context.
+Patterns over points: Clustering reveals natural groupings that single-variable thresholds miss. Two segments with identical wall loss receive vastly different cluster assignments (and maintenance priorities) based on CP, soil, coating, and location context.
 
-**Dendrograms for transparency:** Visual hierarchy shows exactly how assets merge and at what dissimilarity, enabling informed choice of cluster count. No arbitrary K selection—cut the dendrogram where major branches separate.
+Dendrograms for transparency: Visual hierarchy shows exactly how assets merge and at what dissimilarity, enabling informed choice of cluster count. No arbitrary K selection—cut the dendrogram where major branches separate.
 
-**Multi-project applicability:** Same methodology applies to pipeline health, compressor operational regimes, and ROW vegetation. Any multivariate operational dataset benefits from hierarchical clustering.
+Multi-project applicability: Same methodology applies to pipeline health, compressor operational regimes, and ROW vegetation. Any multivariate operational dataset benefits from hierarchical clustering.
 
-**Lakehouse integration:** Bronze → Silver → Gold pattern fits naturally with Delta Live Tables for automated pipelines and MLflow for experiment tracking. Clustering becomes part of production data workflows, not one-off analysis.
+Lakehouse integration: Bronze → Silver → Gold pattern fits naturally with Delta Live Tables for automated pipelines and MLflow for experiment tracking. Clustering becomes part of production data workflows, not one-off analysis.
 
-**Proven ROI:** Production case study demonstrates $2.7M net savings over 3 years through differentiated inspection intervals and targeted interventions. The approach pays for itself by preventing two leak events.
+Proven ROI: Production case study demonstrates $2.7M net savings over 3 years through differentiated inspection intervals and targeted interventions. The approach pays for itself by preventing two leak events.
 
-**Regulatory acceptance:** Dendrograms and cluster profiles provide transparent, auditable justification for risk-based integrity management. Regulators approve variable inspection intervals when backed by data-driven clustering.
+Regulatory acceptance: Dendrograms and cluster profiles provide transparent, auditable justification for risk-based integrity management. Regulators approve variable inspection intervals when backed by data-driven clustering.
 
 ---
 
@@ -357,15 +357,15 @@ Apply methodology to compressor operational state clustering. Cluster ROW satell
 
 ## Further Reading
 
-- **SciPy Hierarchical Clustering:** [docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html](https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html)
-- **scikit-learn Clustering:** [scikit-learn.org/stable/modules/clustering.html](https://scikit-learn.org/stable/modules/clustering.html)
-- **Databricks Mosaic:** [databricks.com/product/mosaic](https://www.databricks.com/product/mosaic)
-- **Delta Live Tables:** [docs.databricks.com/delta-live-tables](https://docs.databricks.com/delta-live-tables/index.html)
-- **NACE Pipeline Integrity:** [nace.org/resources/pipeline-integrity](https://www.nace.org/)
+- SciPy Hierarchical Clustering: [docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html](https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html)
+- scikit-learn Clustering: [scikit-learn.org/stable/modules/clustering.html](https://scikit-learn.org/stable/modules/clustering.html)
+- Databricks Mosaic: [databricks.com/product/mosaic](https://www.databricks.com/product/mosaic)
+- Delta Live Tables: [docs.databricks.com/delta-live-tables](https://docs.databricks.com/delta-live-tables/index.html)
+- NACE Pipeline Integrity: [nace.org/resources/pipeline-integrity](https://www.nace.org/)
 
 ---
 
-**About This Analysis**: All code tested on Databricks Runtime 14.3 LTS. Clustering methodology validated against regulatory requirements for risk-based integrity management (API 1160, ASME B31.8S). For consulting inquiries, reach out via LinkedIn.
+About This Analysis: All code tested on Databricks Runtime 14.3 LTS. Clustering methodology validated against regulatory requirements for risk-based integrity management (API 1160, ASME B31.8S). For consulting inquiries, reach out via LinkedIn.
 
 ---
 

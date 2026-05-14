@@ -4,11 +4,11 @@
 
 A pipeline integrity engineer reviews inline inspection (ILI) data for 500 km of pipeline divided into 2,000 segments. The average wall loss is 12%. Management asks: "Is this acceptable?"
 
-The answer depends on what the average hides. Are 90% of segments pristine with 10% severely corroded? Or is every segment uniformly degraded? Are coastal segments behaving differently from desert segments? Traditional dashboards show summary statistics—mean wall loss, maximum pit depth, total anomalies—but these metrics obscure **natural groups** that share similar degradation signatures.
+The answer depends on what the average hides. Are 90% of segments pristine with 10% severely corroded? Or is every segment uniformly degraded? Are coastal segments behaving differently from desert segments? Traditional dashboards show summary statistics—mean wall loss, maximum pit depth, total anomalies—but these metrics obscure natural groups that share similar degradation signatures.
 
 An operator might flag segments exceeding a single threshold (e.g., wall loss > 20%), but this binary classification misses nuance. A segment with 18% wall loss, poor coating, and high soil resistivity is riskier than a 22% wall loss segment with excellent CP and recent remediation. Thresholds can't capture these multivariate patterns.
 
-Hierarchical clustering solves this. By grouping segments based on multiple features—wall loss, cathodic protection (CP) potential, soil resistivity, coating condition, and historical inspection trends—you uncover **natural health regimes** that inform targeted integrity management. This article demonstrates a working implementation using Apache Spark, SciPy, and Databricks.
+Hierarchical clustering solves this. By grouping segments based on multiple features—wall loss, cathodic protection (CP) potential, soil resistivity, coating condition, and historical inspection trends—you uncover natural health regimes that inform targeted integrity management. This article demonstrates a working implementation using Apache Spark, SciPy, and Databricks.
 
 ---
 
@@ -85,11 +85,11 @@ Hierarchical clustering identifies groups of segments with similar multivariate 
 └─────────────────────────┘
 ```
 
-**Key components:**
-- **Bronze tables:** Raw ILI, CP, soil data ingested from field tools.
-- **Silver tables:** Segment-level features engineered from bronze data.
-- **SciPy clustering:** Hierarchical clustering (Ward linkage) on normalized features.
-- **Gold tables:** Segments tagged with cluster IDs, ready for operational dashboards.
+Key components:
+- Bronze tables: Raw ILI, CP, soil data ingested from field tools.
+- Silver tables: Segment-level features engineered from bronze data.
+- SciPy clustering: Hierarchical clustering (Ward linkage) on normalized features.
+- Gold tables: Segments tagged with cluster IDs, ready for operational dashboards.
 
 ---
 
@@ -238,10 +238,10 @@ result_df = spark.createDataFrame(df[['segment_id', 'cluster_id']])
 result_df.write.mode('overwrite').saveAsTable('gold.segment_clusters')
 ```
 
-**Key choices:**
-- **Ward linkage:** Minimizes within-cluster variance (similar to K-means objective).
-- **StandardScaler:** Prevents features with large scales (e.g., soil resistivity in Ω·cm) from dominating.
-- **Median imputation:** Handles missing values conservatively.
+Key choices:
+- Ward linkage: Minimizes within-cluster variance (similar to K-means objective).
+- StandardScaler: Prevents features with large scales (e.g., soil resistivity in Ω·cm) from dominating.
+- Median imputation: Handles missing values conservatively.
 
 ---
 
@@ -285,7 +285,7 @@ cluster_profiles['segment_count'] = df.groupby('cluster_id').size()
 print(cluster_profiles.round(2))
 ```
 
-**Example output:**
+Example output:
 
 | cluster_id | avg_wall_loss_pct | avg_cp_potential_mv | avg_soil_resistivity | segment_count |
 |------------|-------------------|---------------------|----------------------|---------------|
@@ -406,13 +406,13 @@ WHERE prev_cluster = 1 AND curr_cluster IN (3, 5)
 ORDER BY wall_loss_increase DESC;
 ```
 
-This identifies segments with **accelerating degradation** that require immediate investigation.
+This identifies segments with accelerating degradation that require immediate investigation.
 
 ---
 
 ## Alternative: Operational State Clustering
 
-The same technique applies to SCADA data for **operational regime clustering**:
+The same technique applies to SCADA data for operational regime clustering:
 
 ### Features for Compressor Station Clustering
 
@@ -432,12 +432,12 @@ features_operational = [
 
 ### Identified Operational Clusters
 
-- **Cluster A:** Steady-state operation (low variance).
-- **Cluster B:** Transient operation (high variance, frequent starts/stops).
-- **Cluster C:** Surge-prone (high kurtosis in flow rate).
-- **Cluster D:** Low-flow / idle (near-zero flow for >12 hours).
+- Cluster A: Steady-state operation (low variance).
+- Cluster B: Transient operation (high variance, frequent starts/stops).
+- Cluster C: Surge-prone (high kurtosis in flow rate).
+- Cluster D: Low-flow / idle (near-zero flow for >12 hours).
 
-**Use case:** Flag Cluster C days for surge analysis. Correlate with compressor failures.
+Use case: Flag Cluster C days for surge analysis. Correlate with compressor failures.
 
 ---
 
@@ -652,9 +652,9 @@ Beyond averages, hierarchical clustering reveals natural groupings in pipeline h
 
 ## Further Reading
 
-- **SciPy Hierarchical Clustering:** [docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html](https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html)
-- **Databricks Delta Lake:** [docs.databricks.com/delta](https://docs.databricks.com/delta/index.html)
-- **NACE Pipeline Integrity:** [nace.org/resources/pipeline-integrity](https://www.nace.org/)
-- **API 1160 (Integrity Management):** [api.org/products-and-services/1160](https://www.api.org/)
+- SciPy Hierarchical Clustering: [docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html](https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html)
+- Databricks Delta Lake: [docs.databricks.com/delta](https://docs.databricks.com/delta/index.html)
+- NACE Pipeline Integrity: [nace.org/resources/pipeline-integrity](https://www.nace.org/)
+- API 1160 (Integrity Management): [api.org/products-and-services/1160](https://www.api.org/)
 
 ---
