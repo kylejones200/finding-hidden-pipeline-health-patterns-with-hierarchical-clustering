@@ -31,7 +31,6 @@ logger.info("Blog 25: Three Clustering Projects - Visualizations")
 # ============================================================================
 logger.info("\nGenerating pipeline health clustering dendrogram...")
 
-np.random.seed(42)
 N = 200
 
 df_health = pd.DataFrame({
@@ -71,7 +70,6 @@ logger.info("✓ Pipeline health dendrogram saved")
 # ============================================================================
 logger.info("Generating compressor operational regimes dendrogram...")
 
-np.random.seed(77)
 T = 24 * 30
 time = pd.date_range('2024-07-01', periods=T, freq='h')
 
@@ -147,6 +145,7 @@ ax.set_yticks([])
 from matplotlib.patches import Patch
 
 from pathlib import Path
+np.random.seed(42)
 legend_elements = [
     Patch(facecolor=colors_regimes[0], edgecolor='black', label='Steady-State'),
     Patch(facecolor=colors_regimes[1], edgecolor='black', label='Transient'),
@@ -169,7 +168,6 @@ logger.info("✓ Compressor cluster timeline saved")
 # ============================================================================
 logger.info("Generating ROW vegetation clustering dendrogram...")
 
-np.random.seed(9)
 N_tiles = 150
 
 df_row = pd.DataFrame({

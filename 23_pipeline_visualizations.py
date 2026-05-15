@@ -23,6 +23,7 @@ from sklearn.cluster import AgglomerativeClustering
 
 
 from pathlib import Path
+np.random.seed(42)
 logger.info("Blog 23: Pipeline Health Clustering - Visualizations")
 
 # Set style
@@ -32,7 +33,6 @@ logger.info("Blog 23: Pipeline Health Clustering - Visualizations")
 # ============================================================================
 logger.info("\nGenerating synthetic pipeline segment data...")
 
-np.random.seed(42)
 n_segments = 500
 
 # Generate features with realistic patterns
