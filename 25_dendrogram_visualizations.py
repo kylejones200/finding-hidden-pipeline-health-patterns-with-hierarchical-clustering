@@ -1,5 +1,3 @@
-import sys
-import os
 
 import logging
 logging.basicConfig(
@@ -144,7 +142,6 @@ ax.set_yticks([])
 # Legend
 from matplotlib.patches import Patch
 
-from pathlib import Path
 np.random.seed(42)
 legend_elements = [
     Patch(facecolor=colors_regimes[0], edgecolor='black', label='Steady-State'),
