@@ -1,13 +1,57 @@
 # Finding Hidden Pipeline Health Patterns with Hierarchical Clustering
 
-Published: 2025-10-28
-Medium: [https://medium.com/@kyle-t-jones/finding-hidden-pipeline-health-patterns-with-hierarchical-clustering-e9d3d08e2931](https://medium.com/@kyle-t-jones/finding-hidden-pipeline-health-patterns-with-hierarchical-clustering-e9d3d08e2931)
+Published: 2025-10-28  
+Medium: [Finding Hidden Pipeline Health Patterns with Hierarchical Clustering](https://medium.com/@kyle-t-jones/finding-hidden-pipeline-health-patterns-with-hierarchical-clustering-e9d3d08e2931)
 
-## About
+Companion code for the article (`article.md`). Generates dendrograms and cluster maps from synthetic pipeline, compressor, and right-of-way data.
 
-Place the code for this article in this repository.
-The original article export is saved as `article.md`.
+## Quick start
 
-## Files
+Requires [uv](https://docs.astral.sh/uv/).
 
-Add your `.ipynb`, `.py`, `.yaml`, `.js`, `.ts`, or other project files here.
+```bash
+uv sync
+uv run pipeline-clustering-run all
+```
+
+Generate one figure set:
+
+```bash
+uv run pipeline-clustering-run pipeline-health
+uv run pipeline-clustering-run three-projects
+```
+
+Figures are written to `outputs/figures/`.
+
+## Outputs
+
+| Command | Figures |
+|---------|---------|
+| `pipeline-health` | `23_pipeline_dendrogram.png`, `23_pipeline_clusters_spatial.png`, `23_pipeline_cluster_profiles.png` |
+| `three-projects` | `25_pipeline_health_dendrogram.png`, `25_compressor_regimes_dendrogram.png`, `25_compressor_cluster_timeline.png`, `25_row_vegetation_dendrogram.png` |
+| `all` | All of the above |
+
+## Project layout
+
+```
+pyproject.toml / uv.lock
+src/pipeline_clustering/   # clustering logic and plot generators
+outputs/figures/           # generated PNGs (gitignored except .gitkeep)
+content/blog/              # companion blog drafts
+content/linkedin/          # LinkedIn post drafts
+legacy/                    # original root-level scripts (reference)
+tests/
+article.md
+```
+
+## Development
+
+```bash
+uv sync --extra dev
+uv run pytest
+uv run ruff check src tests
+```
+
+## License
+
+MIT

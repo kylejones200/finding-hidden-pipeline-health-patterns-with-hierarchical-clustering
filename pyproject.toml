@@ -1,0 +1,41 @@
+[project]
+name = "pipeline-clustering"
+version = "0.1.0"
+description = "Hierarchical clustering visualizations for pipeline health and related assets"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.10.0",
+    "numpy>=2.0.0",
+    "pandas>=2.2.0",
+    "scipy>=1.14.0",
+    "scikit-learn>=1.5.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.8"]
+
+[project.scripts]
+pipeline-clustering-run = "pipeline_clustering.runner:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pipeline_clustering"]
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
