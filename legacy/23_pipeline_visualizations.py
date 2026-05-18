@@ -10,45 +10,25 @@ from sklearn.preprocessing import StandardScaler
 
 def plot_dendrogram(X_scaled, Z, df, features, logger) -> None:
     fig, ax = plt.subplots(figsize=(12, 6))
-
     dendrogram(Z, ax=ax, no_labels=True, color_threshold=Z[-5, 2], above_threshold_color="gray")
-
     ax.set_xlabel("Segment Index (sorted by similarity)", fontsize=11)
-
     ax.set_ylabel("Linkage Distance", fontsize=11)
-
     ax.set_title("Pipeline Segment Hierarchical Clustering Dendrogram", fontsize=12, pad=15)
-
     ax.spines["top"].set_visible(False)
-
     ax.spines["right"].set_visible(False)
-
     ax.spines["left"].set_position(("outward", 5))
-
     ax.spines["bottom"].set_position(("outward", 5))
-
     plt.tight_layout()
-
     plt.savefig("23_pipeline_dendrogram.png", dpi=300, bbox_inches="tight")
-
     plt.close()
-
     logger.info("✓ Dendrogram saved")
-
     logger.info("Generating cluster spatial distribution map...")
-
     n_clusters = 5
-
     clustering = AgglomerativeClustering(n_clusters=n_clusters, linkage="ward")
-
     df["cluster_id"] = clustering.fit_predict(X_scaled) + 1
-
     colors = ["#2ecc71", "#f39c12", "#e67e22", "#3498db", "#e74c3c"]
-
     cluster_names = ["Healthy", "Moderate", "High Risk", "Stable", "Critical"]
-
     fig, ax = plt.subplots(figsize=(12, 4))
-
     for i in range(1, n_clusters + 1):
         cluster_data = df[df["cluster_id"] == i]
         ax.scatter(
@@ -63,39 +43,22 @@ def plot_dendrogram(X_scaled, Z, df, features, logger) -> None:
         )
 
     ax.set_xlabel("Chainage (km)", fontsize=11)
-
     ax.set_ylabel("Max Wall Loss (%)", fontsize=11)
-
     ax.set_title("Pipeline Segment Clusters by Location and Wall Loss", fontsize=12, pad=15)
-
     ax.legend(loc="upper left", frameon=False, fontsize=9, ncol=5)
-
     ax.spines["top"].set_visible(False)
-
     ax.spines["right"].set_visible(False)
-
     ax.spines["left"].set_position(("outward", 5))
-
     ax.spines["bottom"].set_position(("outward", 5))
-
     plt.tight_layout()
-
     plt.savefig("23_pipeline_clusters_spatial.png", dpi=300, bbox_inches="tight")
-
     plt.close()
-
     logger.info("✓ Spatial distribution map saved")
-
     logger.info("Generating cluster profile comparison...")
-
     cluster_profiles = df.groupby("cluster_id")[features].mean()
-
     fig, ax = plt.subplots(figsize=(8, 6))
-
     x = np.arange(len(features))
-
     width = 0.15
-
     for i in range(1, n_clusters + 1):
         profile = cluster_profiles.loc[i]
         profile_norm = (profile - cluster_profiles.min()) / (
@@ -114,50 +77,30 @@ def plot_dendrogram(X_scaled, Z, df, features, logger) -> None:
         )
 
     ax.set_xlabel("Feature", fontsize=11)
-
     ax.set_ylabel("Normalized Value (0-1)", fontsize=11)
-
     ax.set_title("Cluster Feature Profiles (Normalized)", fontsize=12, pad=15)
-
     ax.set_xticks(x)
-
     ax.set_xticklabels(
         ["Avg Wall Loss", "Max Wall Loss", "CP Potential", "Soil Resistivity", "Anomaly Count"],
         rotation=45,
         ha="right",
         fontsize=9,
     )
-
     ax.legend(loc="upper left", frameon=False, fontsize=9, ncol=5)
-
     ax.spines["top"].set_visible(False)
-
     ax.spines["right"].set_visible(False)
-
     ax.spines["left"].set_position(("outward", 5))
-
     ax.spines["bottom"].set_position(("outward", 5))
-
     plt.tight_layout()
-
     plt.savefig("23_pipeline_cluster_profiles.png", dpi=300, bbox_inches="tight")
-
     plt.close()
-
     logger.info("✓ Cluster profiles saved")
-
     logger.info("=== All visualizations generated successfully! ===")
-
     logger.info("\nFiles created:")
-
     logger.info("  - 23_pipeline_dendrogram.png")
-
     logger.info("  - 23_pipeline_clusters_spatial.png")
-
     logger.info("  - 23_pipeline_cluster_profiles.png")
-
     logger.info("\nCluster Statistics:")
-
     for i in range(1, n_clusters + 1):
         cluster_data = df[df["cluster_id"] == i]
         logger.info(f"\n  Cluster {i} ({cluster_names[i - 1]}):")
@@ -171,19 +114,12 @@ def plot_dendrogram(X_scaled, Z, df, features, logger) -> None:
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
     logger = logging.getLogger(__name__)
-
     "\n    Blog 23: Pipeline Health Clustering - Visualization Generator\n    Generates dendrogram and spatial clustering visualizations\n    "
-
     np.random.seed(42)
-
     logger.info("Blog 23: Pipeline Health Clustering - Visualizations")
-
     logger.info("\nGenerating synthetic pipeline segment data...")
-
     n_segments = 500
-
     cluster_centers = [
         {"wall_loss": 5, "cp_potential": -1050, "soil_resist": 2100},
         {"wall_loss": 18, "cp_potential": -980, "soil_resist": 3800},
@@ -191,9 +127,7 @@ def main() -> None:
         {"wall_loss": 15, "cp_potential": -1100, "soil_resist": 1600},
         {"wall_loss": 28, "cp_potential": -750, "soil_resist": 9500},
     ]
-
     segments = []
-
     for i in range(n_segments):
         cluster = np.random.choice(5, p=[0.35, 0.25, 0.15, 0.2, 0.05])
         center = cluster_centers[cluster]
@@ -215,11 +149,8 @@ def main() -> None:
         )
 
     df = pd.DataFrame(segments)
-
     logger.info(f"✓ Generated {len(df)} segments")
-
     logger.info("\nGenerating hierarchical clustering dendrogram...")
-
     features = [
         "avg_wall_loss_pct",
         "max_wall_loss_pct",
@@ -227,13 +158,9 @@ def main() -> None:
         "avg_soil_resistivity_ohm_cm",
         "anomaly_count",
     ]
-
     X = df[features].values
-
     scaler = StandardScaler()
-
     X_scaled = scaler.fit_transform(X)
-
     Z = linkage(X_scaled, method="ward")
     plot_dendrogram(X_scaled, Z, df, features, logger)
 

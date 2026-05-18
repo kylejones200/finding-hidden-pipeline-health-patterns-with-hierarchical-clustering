@@ -42,7 +42,6 @@ def _plot_pipeline_health_dendrogram(out: Path, n: int = 200) -> None:
     )
     coating_score = {"FBE": 1.0, "PE": 0.75, "CoalTar": 0.5, "Tape": 0.25}
     df_health["coating_score"] = df_health["coating"].map(coating_score)
-
     features = [
         "avg_wall_loss_pct",
         "cp_potential_mv",
@@ -52,7 +51,6 @@ def _plot_pipeline_health_dendrogram(out: Path, n: int = 200) -> None:
     ]
     x_health = StandardScaler().fit_transform(df_health[features])
     z_health = linkage(x_health, method="ward")
-
     fig, ax = plt.subplots(figsize=(12, 6))
     dendrogram(
         z_health,
@@ -75,13 +73,9 @@ def _plot_pipeline_health_dendrogram(out: Path, n: int = 200) -> None:
 def _plot_compressor_regimes(out_dendrogram: Path, out_timeline: Path) -> int:
     t = 24 * 30
     time = pd.date_range("2024-07-01", periods=t, freq="h")
-
     flow = 200 + 10 * np.sin(2 * np.pi * np.arange(t) / 24) + np.random.normal(0, 4, t)
     p_suction = 600 + 5 * np.sin(2 * np.pi * np.arange(t) / 12) + np.random.normal(0, 2, t)
-    p_discharge = (
-        640 + 6 * np.sin(2 * np.pi * np.arange(t) / 12) + np.random.normal(0, 3, t)
-    )
-
+    p_discharge = 640 + 6 * np.sin(2 * np.pi * np.arange(t) / 12) + np.random.normal(0, 3, t)
     for i in range(5, 8):
         idx = slice(i * 24, (i + 1) * 24)
         flow[idx] += np.random.normal(0, 15, 24)
@@ -94,7 +88,6 @@ def _plot_compressor_regimes(out_dendrogram: Path, out_timeline: Path) -> int:
     df_scada = pd.DataFrame(
         {"timestamp": time, "flow": flow, "p_suction": p_suction, "p_discharge": p_discharge}
     )
-
     window_size = 24
     daily_features = []
     for i in range(0, len(df_scada) - window_size, window_size):
@@ -114,7 +107,6 @@ def _plot_compressor_regimes(out_dendrogram: Path, out_timeline: Path) -> int:
     features_ops = ["flow_mean", "flow_std", "flow_kurtosis", "dp_mean", "dp_std"]
     x_ops = StandardScaler().fit_transform(df_daily[features_ops])
     z_ops = linkage(x_ops, method="ward")
-
     fig, ax = plt.subplots(figsize=(12, 5))
     dendrogram(
         z_ops,
@@ -132,11 +124,9 @@ def _plot_compressor_regimes(out_dendrogram: Path, out_timeline: Path) -> int:
     plt.tight_layout()
     fig.savefig(out_dendrogram, dpi=300, bbox_inches="tight")
     plt.close(fig)
-
     df_daily["cluster_id"] = AgglomerativeClustering(n_clusters=4, linkage="ward").fit_predict(
         x_ops
     )
-
     colors_regimes = ["#2ecc71", "#e67e22", "#95a5a6", "#e74c3c"]
     fig, ax = plt.subplots(figsize=(12, 4))
     for day, cluster in enumerate(df_daily["cluster_id"]):
@@ -157,7 +147,6 @@ def _plot_compressor_regimes(out_dendrogram: Path, out_timeline: Path) -> int:
     plt.tight_layout()
     fig.savefig(out_timeline, dpi=300, bbox_inches="tight")
     plt.close(fig)
-
     return len(df_daily)
 
 
@@ -173,19 +162,16 @@ def _plot_row_vegetation(out: Path, n_tiles: int = 150) -> None:
             "bare_soil_fraction": np.random.uniform(0, 0.7, n_tiles),
         }
     )
-
     forest_indices = np.random.choice(n_tiles, size=40, replace=False)
     df_row.loc[forest_indices, "ndvi_mean"] = np.random.uniform(0.65, 0.80, 40)
     df_row.loc[forest_indices, "ndvi_std"] = np.random.uniform(0.10, 0.20, 40)
     df_row.loc[forest_indices, "bare_soil_fraction"] = np.random.uniform(0.0, 0.10, 40)
-
     bare_indices = np.random.choice(
         [i for i in range(n_tiles) if i not in forest_indices], size=25, replace=False
     )
     df_row.loc[bare_indices, "ndvi_mean"] = np.random.uniform(0.1, 0.25, 25)
     df_row.loc[bare_indices, "bare_soil_fraction"] = np.random.uniform(0.60, 0.85, 25)
     df_row.loc[bare_indices, "thermal_anomaly_score"] = np.random.uniform(0.3, 0.8, 25)
-
     features_row = [
         "ndvi_mean",
         "ndvi_std",
@@ -195,7 +181,6 @@ def _plot_row_vegetation(out: Path, n_tiles: int = 150) -> None:
     ]
     x_row = StandardScaler().fit_transform(df_row[features_row])
     z_row = linkage(x_row, method="ward")
-
     fig, ax = plt.subplots(figsize=(12, 5))
     dendrogram(
         z_row,
@@ -219,24 +204,19 @@ def run(seed: int = 42) -> list[Path]:
     """Generate three-project clustering figures; return written paths."""
     np.random.seed(seed)
     logger.info("Three clustering projects visualizations")
-
     paths = [
         figure_path("25_pipeline_health_dendrogram.png"),
         figure_path("25_compressor_regimes_dendrogram.png"),
         figure_path("25_compressor_cluster_timeline.png"),
         figure_path("25_row_vegetation_dendrogram.png"),
     ]
-
     _plot_pipeline_health_dendrogram(paths[0])
     logger.info("Wrote %s", paths[0])
-
     n_days = _plot_compressor_regimes(paths[1], paths[2])
     logger.info("Wrote %s", paths[1])
     logger.info("Wrote %s", paths[2])
-
     _plot_row_vegetation(paths[3])
     logger.info("Wrote %s", paths[3])
-
     logger.info(
         "Summary: 200 pipeline segments, %d compressor days, 150 ROW tiles",
         n_days,

@@ -37,7 +37,6 @@ def _generate_segments(n_segments: int = 500, seed: int = 42) -> pd.DataFrame:
         {"wall_loss": 15, "cp_potential": -1100, "soil_resist": 1600},
         {"wall_loss": 28, "cp_potential": -750, "soil_resist": 9500},
     ]
-
     segments = []
     for i in range(n_segments):
         cluster = rng.choice(5, p=[0.35, 0.25, 0.15, 0.20, 0.05])
@@ -46,15 +45,12 @@ def _generate_segments(n_segments: int = 500, seed: int = 42) -> pd.DataFrame:
         cp_potential = center["cp_potential"] + rng.normal(0, 40)
         soil_resist = center["soil_resist"] + rng.normal(0, 800)
         chainage = i * 1.0
-
         segments.append(
             {
                 "segment_id": f"SEG-{i:04d}",
                 "start_chainage_km": chainage,
                 "avg_wall_loss_pct": np.clip(wall_loss, 0, 40),
-                "max_wall_loss_pct": np.clip(
-                    wall_loss + rng.uniform(2, 8), 0, 50
-                ),
+                "max_wall_loss_pct": np.clip(wall_loss + rng.uniform(2, 8), 0, 50),
                 "avg_cp_potential_mv": cp_potential,
                 "avg_soil_resistivity_ohm_cm": np.clip(soil_resist, 500, 12000),
                 "anomaly_count": rng.poisson(center["wall_loss"] / 5),
@@ -75,9 +71,7 @@ def _apply_tufte_spines(ax: plt.Axes) -> None:
 def plot_dendrogram(X_scaled: np.ndarray, out: Path) -> None:
     z = linkage(X_scaled, method="ward")
     fig, ax = plt.subplots(figsize=(12, 6))
-    dendrogram(
-        z, ax=ax, no_labels=True, color_threshold=z[-5, 2], above_threshold_color="gray"
-    )
+    dendrogram(z, ax=ax, no_labels=True, color_threshold=z[-5, 2], above_threshold_color="gray")
     ax.set_xlabel("Segment Index (sorted by similarity)", fontsize=11)
     ax.set_ylabel("Linkage Distance", fontsize=11)
     ax.set_title("Pipeline Segment Hierarchical Clustering Dendrogram", fontsize=12, pad=15)
@@ -117,7 +111,6 @@ def plot_cluster_profiles(df: pd.DataFrame, out: Path, n_clusters: int = 5) -> N
     fig, ax = plt.subplots(figsize=(8, 6))
     x = np.arange(len(FEATURES))
     width = 0.15
-
     for i in range(1, n_clusters + 1):
         profile = cluster_profiles.loc[i]
         profile_norm = (profile - cluster_profiles.min()) / (
@@ -163,27 +156,20 @@ def run(seed: int = 42, n_segments: int = 500, n_clusters: int = 5) -> list[Path
     logger.info("Pipeline health clustering visualizations")
     df = _generate_segments(n_segments=n_segments, seed=seed)
     logger.info("Generated %d synthetic segments", len(df))
-
     x_scaled = StandardScaler().fit_transform(df[FEATURES].values)
-
     paths = [
         figure_path("23_pipeline_dendrogram.png"),
         figure_path("23_pipeline_clusters_spatial.png"),
         figure_path("23_pipeline_cluster_profiles.png"),
     ]
-
     plot_dendrogram(x_scaled, paths[0])
     logger.info("Wrote %s", paths[0])
-
     clustering = AgglomerativeClustering(n_clusters=n_clusters, linkage="ward")
     df["cluster_id"] = clustering.fit_predict(x_scaled) + 1
-
     plot_spatial_clusters(df, paths[1], n_clusters=n_clusters)
     logger.info("Wrote %s", paths[1])
-
     plot_cluster_profiles(df, paths[2], n_clusters=n_clusters)
     logger.info("Wrote %s", paths[2])
-
     for i in range(1, n_clusters + 1):
         cluster_data = df[df["cluster_id"] == i]
         logger.info(

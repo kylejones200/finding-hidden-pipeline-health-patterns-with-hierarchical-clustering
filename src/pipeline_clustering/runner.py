@@ -38,9 +38,7 @@ def main() -> None:
     parser.add_argument("-v", "--verbose", action="store_true")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     args = parser.parse_args()
-
     configure_logging(logging.DEBUG if args.verbose else logging.INFO)
-
     if args.command == "pipeline-health":
         run_pipeline_health(seed=args.seed)
     elif args.command == "three-projects":
