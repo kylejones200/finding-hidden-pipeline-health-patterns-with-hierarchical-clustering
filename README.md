@@ -5,6 +5,14 @@ Medium: [Finding Hidden Pipeline Health Patterns with Hierarchical Clustering](h
 
 Companion code for the article (`article.md`). Generates dendrograms and cluster maps from synthetic pipeline, compressor, and right-of-way data.
 
+## Business context
+
+A pipeline integrity engineer reviews inline inspection (ILI) data for 500 km of pipeline divided into 2,000 segments. The average wall loss is 12%. Management asks: "Is this acceptable?"
+
+The answer? It depends. What are the average hides? Are 90% of segments pristine with 10% severely corroded? Or is every segment uniformly degraded? Are coastal segments behaving differently from desert segments? Traditional dashboards show summary statistics --- mean wall loss, maximum pit depth, total anomalies --- but these metrics obscure natural groups that share similar degradation signatures.
+
+An operator might flag segments exceeding a single threshold (e.g., wall loss > 20%), but this binary classification misses nuance. A segment with 18% wall loss, poor coating, and high soil resistivity is riskier than a 22% wall loss segment with excellent CP and recent remediation. Thresholds can't capture these multivariate patterns.
+
 ## Quick start
 
 Requires [uv](https://docs.astral.sh/uv/).
