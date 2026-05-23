@@ -50,6 +50,9 @@ content/linkedin/          # LinkedIn post drafts
 legacy/                    # original root-level scripts (reference)
 tests/
 article.md
+├── rust/                   # Rust port (core + PyO3 + CLI bench)
+├── benchmark_rust.py       # Python vs Rust benchmark
+├── src/compute_kernel.py   # Python/numpy reference kernel
 ```
 
 ## Development
@@ -59,6 +62,31 @@ uv sync --extra dev
 uv run pytest
 uv run ruff check src tests
 ```
+
+## Rust performance port
+
+Side-by-side **Python vs Rust** implementation of the numeric hot loop — synthetic pipeline segment feature generation. Reference PyO3 benchmark: **~430×** on a release build (local machine; run `benchmark_rust.py` to reproduce).
+
+| Path | Role |
+|------|------|
+| `src/compute_kernel.py` | Python/numpy reference kernel |
+| `rust/core/` | Pure Rust library |
+| `rust/py/` | PyO3 bindings |
+| `rust/bench/` | Standalone CLI benchmark |
+| `benchmark_rust.py` | Python vs Rust timing + correctness check |
+
+```bash
+# Rust-only CLI benchmark
+cd rust && cargo run --release -p finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_bench
+
+# Python vs Rust (PyO3)
+pip install maturin numpy
+maturin develop --release -m rust/py/Cargo.toml
+python benchmark_rust.py
+```
+
+Python ML training, solvers, and orchestration stay in Python; Rust targets the numeric hot loops. Stochastic generators validate output shapes; deterministic kernels match at tight floating-point tolerance.
+
 
 ## Disclaimer
 
