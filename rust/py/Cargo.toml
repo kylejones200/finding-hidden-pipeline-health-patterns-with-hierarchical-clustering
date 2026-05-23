@@ -1,0 +1,15 @@
+[package]
+name = "finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_rs"
+description = "Python bindings (PyO3) for finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_core = { path = "../core" }
+pyo3 = { version = "0.28", features = ["extension-module"] }
+numpy = "0.28"

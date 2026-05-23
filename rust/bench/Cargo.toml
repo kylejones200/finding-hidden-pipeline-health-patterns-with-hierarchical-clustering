@@ -1,0 +1,13 @@
+[package]
+name = "finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_bench"
+description = "Standalone Rust benchmark (no Python)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "bench"
+path = "src/main.rs"
+
+[dependencies]
+finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_core = { path = "../core" }

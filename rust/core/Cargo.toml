@@ -1,0 +1,9 @@
+[package]
+name = "finding_hidden_pipeline_health_patterns_with_hierarchical_clustering_core"
+description = "Synthetic segment integrity features"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+path = "src/lib.rs"
