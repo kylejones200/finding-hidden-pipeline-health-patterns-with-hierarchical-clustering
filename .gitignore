@@ -36,3 +36,8 @@ node_modules/
 .pytest_cache/
 .ruff_cache/
 rust/target/
+# macOS metadata on external volumes
+._*
+.AppleDouble
+# Backup files (may contain secrets)
+*.bak
